@@ -1,6 +1,10 @@
 package com.digitalwallet.entity;
 
 import com.digitalwallet.generic.GenericEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -8,6 +12,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "wallet", schema = "digital_wallet")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Wallet extends GenericEntity {
 
     @Id
@@ -20,9 +28,6 @@ public class Wallet extends GenericEntity {
     @Column(name = "balance", nullable = false)
     private Long balance;
 
-//    @Column(name = "wallet_name", nullable = false, length = 15)
-//    private String name;
-
     @Column(nullable = false)
     private boolean activeStatus = true;
 
@@ -34,51 +39,5 @@ public class Wallet extends GenericEntity {
 
     @OneToMany(cascade = CascadeType.ALL , mappedBy ="wallet")
     private List<Transaction> transactionList = new ArrayList<>();
-    public Long getWalletId() {
-        return walletId;
-    }
 
-    public void setWalletId(Long walletId) {
-        this.walletId = walletId;
-    }
-
-    public String getWalletCode() {
-        return walletCode;
-    }
-
-    public void setWalletCode(String walletCode) {
-        this.walletCode = walletCode;
-    }
-
-    public Long getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Long balance) {
-        this.balance = balance;
-    }
-
-    public boolean isActiveStatus() {
-        return activeStatus;
-    }
-
-    public void setActiveStatus(boolean activeStatus) {
-        this.activeStatus = activeStatus;
-    }
-
-    public User getWalletUser() {
-        return walletUser;
-    }
-
-    public void setWalletUser(User walletUser) {
-        this.walletUser = walletUser;
-    }
-
-    public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
-    }
 }

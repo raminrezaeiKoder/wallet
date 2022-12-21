@@ -1,6 +1,10 @@
 package com.digitalwallet.entity;
 
 import com.digitalwallet.generic.GenericEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,6 +13,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "user", schema = "digital_wallet")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class User extends GenericEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,72 +40,6 @@ public class User extends GenericEntity {
 
     @OneToMany(cascade = CascadeType.ALL , mappedBy = "transactionUser")
     private List<Transaction> transactionList = new ArrayList<>();
-
-
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getNationalCode() {
-        return nationalCode;
-    }
-
-    public void setNationalCode(String nationalCode) {
-        this.nationalCode = nationalCode;
-    }
-
-    public List<Wallet> getWalletList() {
-        return walletList;
-    }
-
-    public void setWalletList(List<Wallet> walletList) {
-        this.walletList = walletList;
-    }
-
-    public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
-    }
 
     @Override
     public boolean equals(Object o) {

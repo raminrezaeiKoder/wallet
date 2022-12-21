@@ -1,12 +1,13 @@
 package com.digitalwallet.dto.request;
 
-import com.digitalwallet.entity.Transaction;
-import com.digitalwallet.entity.Wallet;
 import com.digitalwallet.generic.GenericDto;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
 public class UserRequestDto extends GenericDto {
 
     private String name ;
@@ -18,43 +19,4 @@ public class UserRequestDto extends GenericDto {
    // private List<Transaction> transactionList = new ArrayList<>();
 
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getNationalCode() {
-        return nationalCode;
-    }
-
-    public void setNationalCode(String nationalCode) {
-        this.nationalCode = nationalCode;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 }
