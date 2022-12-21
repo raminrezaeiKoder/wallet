@@ -1,5 +1,6 @@
 package com.digitalwallet.Exception;
 
+import com.digitalwallet.messages.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -43,5 +44,16 @@ public class ControllerExceptionHandler {
                 request.getDescription(false));
 
         return new ResponseEntity<ErrorMessage>(message, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler({WalletNotFoundException.class, UserNotFoundException.class})
+    public ResponseEntity<ErrorMessage> NotFoundException(WalletNotFoundException ex, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(
+                HttpStatus.PAYMENT_REQUIRED.value(),
+                LocalDateTime.now(),
+                ex.getMessage(),
+                request.getDescription(false));
+
+        return new ResponseEntity<ErrorMessage>(message, HttpStatus.NOT_FOUND);
     }
 }

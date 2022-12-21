@@ -1,5 +1,6 @@
 package com.digitalwallet.service;
 
+import com.digitalwallet.Exception.UserNotFoundException;
 import com.digitalwallet.entity.User;
 import com.digitalwallet.entity.Wallet;
 import com.digitalwallet.generic.GenericRepository;
@@ -46,8 +47,8 @@ public class WalletService extends GenericServiceImpl<Wallet, Long> {
 
 
     //save a wallet into database with its userId
-    public void saveWalletWithItsUser(Wallet wallet , Long userId ){
-        User user = userService.findBydId(userId).get() ;
+    public void saveWalletWithItsUser(Wallet wallet, Long userId) throws UserNotFoundException {
+        User user = userService.findBydId(userId).orElseThrow(() -> new UserNotFoundException());
         wallet.setWalletUser(user);
         super.save(wallet);
     }

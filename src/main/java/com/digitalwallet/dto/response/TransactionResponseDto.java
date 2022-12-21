@@ -20,13 +20,6 @@ public class TransactionResponseDto extends GenericDto {
     private TransactionType transactionType ;
     private TransactionStatus transactionStatus ;
 
-    public String getSourceWalletCode() {
-        return sourceWalletCode;
-    }
-
-    public void setSourceWalletCode(String sourceWalletCode) {
-        this.sourceWalletCode = sourceWalletCode;
-    }
 
 
 }
