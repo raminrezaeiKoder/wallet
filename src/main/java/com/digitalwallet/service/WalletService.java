@@ -5,7 +5,6 @@ import com.digitalwallet.entity.Wallet;
 import com.digitalwallet.generic.GenericRepository;
 import com.digitalwallet.generic.GenericServiceImpl;
 import com.digitalwallet.repository.WalletRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,19 +12,22 @@ import java.util.Optional;
 
 @Service
 public class WalletService extends GenericServiceImpl<Wallet, Long> {
-   @Autowired
-    private WalletRepository walletRepository ;
+    private final WalletRepository walletRepository;
 
-   @Autowired
-   private UserService userService ;
+    private final UserService userService;
+
+    public WalletService(WalletRepository walletRepository, UserService userService) {
+        this.walletRepository = walletRepository;
+        this.userService = userService;
+    }
+
     @Override
     protected GenericRepository getRepository() {
 
-        return this.walletRepository ;
+        return this.walletRepository;
     }
 
-
-    public List<Wallet> findByActiveStatusFalse(){
+    public List<Wallet> findByActiveStatusFalse() {
         return walletRepository.findByActiveStatusFalse();
     }
 

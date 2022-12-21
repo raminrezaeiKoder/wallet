@@ -9,7 +9,6 @@ import com.digitalwallet.entity.Wallet;
 import com.digitalwallet.generic.GenericRepository;
 import com.digitalwallet.generic.GenericServiceImpl;
 import com.digitalwallet.repository.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,10 +17,13 @@ import java.util.Optional;
 
 @Service
 public class TransactionService extends GenericServiceImpl<Transaction, Long> {
-    @Autowired
-    private TransactionRepository transactionRepository;
-    @Autowired
-    private WalletService walletService;
+    private final TransactionRepository transactionRepository;
+    private final WalletService walletService;
+
+    public TransactionService(TransactionRepository transactionRepository, WalletService walletService) {
+        this.transactionRepository = transactionRepository;
+        this.walletService = walletService;
+    }
 
     @Override
     protected GenericRepository getRepository() {
@@ -169,7 +171,7 @@ public class TransactionService extends GenericServiceImpl<Transaction, Long> {
     /*
      * 1. check the source wallet code and destination wallet code for not being equal
      * 2. withdraw , with transaction type -> transfer_withdraw
-     * 3. deposite , with transaction type -> transfer_withdraw
+     * 3. deposit , with transaction type -> transfer_withdraw
      * 4. (save a transaction if there is a successful transfer or not)
      * 5. return both of the withdraw and deposit transactions as a List
      * */

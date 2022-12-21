@@ -9,7 +9,6 @@ import com.digitalwallet.mapper.response.UserResponseMapper;
 import com.digitalwallet.mapper.response.WalletResponseMapper;
 import com.digitalwallet.service.UserService;
 import com.digitalwallet.service.WalletService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,28 +19,32 @@ import java.util.List;
 @RequestMapping("users")
 public class UserController {
 
-    @Autowired
-    private UserService userService ;
+    private final UserService userService;
 
-    @Autowired
-    private WalletResponseMapper walletResponseMapper ;
-    @Autowired
-    private WalletService walletService ;
+    private final WalletResponseMapper walletResponseMapper;
+    private final WalletService walletService;
 
-    @Autowired
-    private UserRequestMapper userRequestMapper ;
+    private final UserRequestMapper userRequestMapper;
 
-    @Autowired
-    private UserResponseMapper userResponseMapper;
+    private final UserResponseMapper userResponseMapper;
+
+    public UserController(UserService userService, WalletResponseMapper walletResponseMapper, WalletService walletService, UserRequestMapper userRequestMapper, UserResponseMapper userResponseMapper) {
+        this.userService = userService;
+        this.walletResponseMapper = walletResponseMapper;
+        this.walletService = walletService;
+        this.userRequestMapper = userRequestMapper;
+        this.userResponseMapper = userResponseMapper;
+    }
+
     @PostMapping
-    public ResponseEntity<UserResponseDto> saveUser(@RequestBody UserRequestDto userRequestDto  , HttpServletResponse httpServletResponse){
+    public ResponseEntity<UserResponseDto> saveUser(@RequestBody UserRequestDto userRequestDto, HttpServletResponse httpServletResponse) {
         User user = userRequestMapper.toBaseEntity(userRequestDto);
         userService.save(user);
         return ResponseEntity.ok(userResponseMapper.toBaseDto(userRequestMapper.toBaseEntity(userRequestDto)));
     }
 
     @GetMapping("{userId}")
-    public ResponseEntity<UserResponseDto> findById(@PathVariable("userId") Long userId){
+    public ResponseEntity<UserResponseDto> findById(@PathVariable("userId") Long userId) {
         User user = userService.findBydId(userId).get();
         return ResponseEntity.ok(userResponseMapper.toBaseDto(user));
     }

@@ -1,51 +1,46 @@
 package com.digitalwallet.controller;
 
-import com.digitalwallet.Exception.ExceptionStatus;
-import com.digitalwallet.Exception.WithdrawLowBalanceException;
-import com.digitalwallet.Exception.WithdrawWalletIsDeactivatedException;
 import com.digitalwallet.dto.request.TransactionRequestDto;
 import com.digitalwallet.dto.response.TransactionResponseDto;
 import com.digitalwallet.entity.Transaction;
-import com.digitalwallet.entity.TransactionStatus;
 import com.digitalwallet.entity.TransactionType;
-import com.digitalwallet.entity.Wallet;
 import com.digitalwallet.mapper.request.TransactionRequestMapper;
 import com.digitalwallet.mapper.response.TransactionResponseMapper;
 import com.digitalwallet.service.TransactionService;
 import com.digitalwallet.service.WalletService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
 
-    @Autowired
-    private TransactionService transactionService;
+    private final TransactionService transactionService;
 
 
-    @Autowired
-    private TransactionRequestMapper transactionRequestMapper;
+    private final TransactionRequestMapper transactionRequestMapper;
 
-    @Autowired
-    private TransactionResponseMapper transactionResponseMapper;
+    private final TransactionResponseMapper transactionResponseMapper;
 
-    @Autowired
-    private WalletService walletService;
+    private final WalletService walletService;
+
+    public TransactionController(TransactionService transactionService, TransactionRequestMapper transactionRequestMapper, TransactionResponseMapper transactionResponseMapper, WalletService walletService) {
+        this.transactionService = transactionService;
+        this.transactionRequestMapper = transactionRequestMapper;
+        this.transactionResponseMapper = transactionResponseMapper;
+        this.walletService = walletService;
+    }
 
 
     @PostMapping("/withdraw")
     public ResponseEntity<TransactionResponseDto> withDraw(@RequestBody TransactionRequestDto transactionRequestDto) {
-        Transaction transaction = transactionService.withdraw(transactionRequestDto , TransactionType.WITHDRAW);
+        Transaction transaction = transactionService.withdraw(transactionRequestDto, TransactionType.WITHDRAW);
         TransactionResponseDto transactionResponseDto = transactionResponseMapper.toBaseDto(transaction);
-       // transactionResponseDto.setSourceName(transaction.getTransactionUser().getName());
-       // transactionResponseDto.setSourceLastName(transaction.getTransactionUser().getLastName());
+        // transactionResponseDto.setSourceName(transaction.getTransactionUser().getName());
+        // transactionResponseDto.setSourceLastName(transaction.getTransactionUser().getLastName());
         return new ResponseEntity<>(transactionResponseDto, HttpStatus.OK);
     }
 
