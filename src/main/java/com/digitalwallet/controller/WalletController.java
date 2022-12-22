@@ -36,9 +36,9 @@ public class WalletController {
         walletService.saveWalletWithItsUser(wallet, walletRequestDto.getUserId());
         WalletResponseDto walletResponseDto = walletResponseMapper.toBaseDto(wallet);
         walletResponseDto.setNationalCode(wallet.getWalletUser().getNationalCode());
-        ResponseMessage responseMessage = ResponseMessage.withResponseData(wallet, "wallet Created Successfully", "info");
+        ResponseMessage responseMessage = ResponseMessage.withResponseData(walletResponseDto, "wallet Created Successfully", "info");
 
-        return new ResponseEntity<ResponseMessage<?>>(responseMessage, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -57,5 +57,16 @@ public class WalletController {
     @GetMapping("/{walletId}")
     public ResponseEntity<WalletResponseDto> findById(@PathVariable("walletId") Long walletId) throws WalletNotFoundException {
         return ResponseEntity.ok(walletResponseMapper.toBaseDto(walletService.findBydId(walletId).orElseThrow(WalletNotFoundException::new)));
+    }
+
+    @PutMapping
+    public ResponseEntity<ResponseMessage<?>> update(@RequestBody WalletRequestDto walletRequestDto, HttpServletResponse httpServletResponse) throws UserNotFoundException, WalletNotFoundException {
+        Wallet wallet = walletRequestMapper.toBaseEntity(walletRequestDto);
+        walletService.updateWalletWithItsUser(wallet, walletRequestDto.getUserId());
+        WalletResponseDto walletResponseDto = walletResponseMapper.toBaseDto(wallet);
+        //walletResponseDto.setNationalCode(wallet.getWalletUser().getNationalCode());
+        ResponseMessage responseMessage = ResponseMessage.withResponseData(walletResponseDto, "wallet updated Successfully", "info");
+
+        return new ResponseEntity<>(responseMessage, HttpStatus.ACCEPTED);
     }
 }

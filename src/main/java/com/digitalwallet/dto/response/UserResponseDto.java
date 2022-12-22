@@ -3,6 +3,8 @@ package com.digitalwallet.dto.response;
 import com.digitalwallet.generic.GenericDto;
 import lombok.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -10,10 +12,12 @@ import lombok.*;
 @Builder
 public class UserResponseDto extends GenericDto {
 
-    private String name ;
-    private String lastName ;
-    private String email ;
-    private String phoneNumber ;
+    private Long id;
 
+    private String userName;
+
+    private String email;
+
+    private List<String> rolesList;
 
 }

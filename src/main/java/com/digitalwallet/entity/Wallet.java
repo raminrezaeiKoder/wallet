@@ -32,8 +32,8 @@ public class Wallet extends GenericEntity {
     private boolean activeStatus = true;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id" , nullable = true )
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = true)
     private User walletUser ;
 
 

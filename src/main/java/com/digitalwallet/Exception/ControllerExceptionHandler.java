@@ -38,7 +38,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(SourceAndDestAreTheSame.class)
     public ResponseEntity<ErrorMessage> SourceAndDestAreTheSame(SourceAndDestAreTheSame ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
-                HttpStatus.PAYMENT_REQUIRED.value(),
+                HttpStatus.NOT_ACCEPTABLE.value(),
                 LocalDateTime.now(),
                 ex.getMessage(),
                 request.getDescription(false));
@@ -46,10 +46,10 @@ public class ControllerExceptionHandler {
         return new ResponseEntity<ErrorMessage>(message, HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @ExceptionHandler({WalletNotFoundException.class, UserNotFoundException.class})
-    public ResponseEntity<ErrorMessage> NotFoundException(WalletNotFoundException ex, WebRequest request) {
+    @ExceptionHandler({WalletNotFoundException.class, UserNotFoundException.class, RuntimeException.class})
+    public ResponseEntity<ErrorMessage> NotFoundException(Exception ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
-                HttpStatus.PAYMENT_REQUIRED.value(),
+                HttpStatus.NO_CONTENT.value(),
                 LocalDateTime.now(),
                 ex.getMessage(),
                 request.getDescription(false));

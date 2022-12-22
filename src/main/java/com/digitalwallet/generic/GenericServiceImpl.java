@@ -22,6 +22,7 @@ public abstract class GenericServiceImpl<T extends GenericEntity, ID extends Ser
         getRepository().save(t);
     }
 
+
     @Override
     public void deleteById(ID id) {
         getRepository().deleteById(id);

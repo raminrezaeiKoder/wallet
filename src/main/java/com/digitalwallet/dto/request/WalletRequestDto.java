@@ -9,8 +9,8 @@ import lombok.*;
 @Setter
 @Builder
 public class WalletRequestDto extends GenericDto {
-
-    private String walletCode ;
+    private Long walletId;
+    private String walletCode;
     private Long balance ;
     private Boolean activeStatus ;
     private Long userId ;

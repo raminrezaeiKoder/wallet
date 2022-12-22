@@ -15,8 +15,5 @@ public class WalletResponseDto extends GenericDto {
 
     private String nationalCode ;
 
-    public String getWalletCode() {
-        return walletCode;
-    }
 
 }

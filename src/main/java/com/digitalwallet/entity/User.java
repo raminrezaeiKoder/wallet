@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "user", schema = "digital_wallet")
@@ -18,47 +20,45 @@ import java.util.Objects;
 @Getter
 @Setter
 public class User extends GenericEntity {
+
+
+    @Column(name = "username", unique = true, nullable = false, length = 16)
+    private String userName;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
-
-    @Column(name = "username", nullable = false, length = 20)
+    @Column(name = "password", nullable = false)
+    private String password;
+    @Column(name = "name", nullable = false, length = 20)
     private String name;
+    @Column(name = "email", nullable = true, length = 50, unique = true)
+    private String email;
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
-    @Column(name = "email", nullable = true, length = 40)
-    private String email;
-    @Column(name = "phone_number", nullable = false, length = 12 , unique = true)
+    @Column(name = "phone_number", nullable = false, length = 12, unique = true)
     private String phoneNumber;
-
-    @Column(name="national_code" , nullable = false , length = 10 , unique = true)
-    private String nationalCode ;
-
-    @OneToMany(cascade = CascadeType.ALL , mappedBy = "walletUser")
+    @Column(name = "national_code", nullable = false, length = 10, unique = true)
+    private String nationalCode;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "walletUser")
     private List<Wallet> walletList = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL , mappedBy = "transactionUser")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transactionUser")
     private List<Transaction> transactionList = new ArrayList<>();
+    @Cascade({
+            org.hibernate.annotations.CascadeType.SAVE_UPDATE,
+            org.hibernate.annotations.CascadeType.MERGE,
+            org.hibernate.annotations.CascadeType.PERSIST
+    })
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return Objects.equals(getUserId(), user.getUserId()) &&
-                Objects.equals(getName(), user.getName()) &&
-                Objects.equals(getLastName(), user.getLastName()) &&
-                Objects.equals(getEmail(), user.getEmail()) &&
-                Objects.equals(getPhoneNumber(), user.getPhoneNumber()) &&
-                Objects.equals(getNationalCode(), user.getNationalCode()) &&
-                Objects.equals(getWalletList(), user.getWalletList()) &&
-                Objects.equals(getTransactionList(), user.getTransactionList());
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(getUserId(), getName(), getLastName(), getEmail(), getPhoneNumber(), getNationalCode(), getWalletList(), getTransactionList());
+    public User(String userName, String email, String password) {
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
     }
 }

@@ -39,16 +39,21 @@ public class UserService extends GenericServiceImpl<User, Long> {
         return userRepository.findByPhoneNumber(phoneNumber);
     }
 
-    public List<User> findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return this.userRepository.findByEmail(email);
     }
 
-    public List<User> findByPhoneNumberStartingWith(String prefix){
-        return this.userRepository.findByPhoneNumberStartingWith(prefix) ;
+    public List<User> findByPhoneNumberStartingWith(String prefix) {
+        return this.userRepository.findByPhoneNumberStartingWith(prefix);
     }
 
 
-    public Optional<User> findByNationalCode(String naitonalCode){
+    @Override
+    public void save(User user) {
+        super.save(user);
+    }
+
+    public Optional<User> findByNationalCode(String naitonalCode) {
         return userRepository.findByNationalCode(naitonalCode);
     }
 }

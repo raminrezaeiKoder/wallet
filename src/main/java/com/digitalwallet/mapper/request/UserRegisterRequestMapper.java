@@ -6,5 +6,5 @@ import com.digitalwallet.generic.GenericMapper;
 import org.mapstruct.Mapper;
 
 @Mapper
-public interface UserRequestMapper extends GenericMapper<User, UserRegisterRequestDto> {
+public interface UserRegisterRequestMapper extends GenericMapper<User, UserRegisterRequestDto> {
 }
