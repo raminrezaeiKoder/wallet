@@ -1,4 +1,4 @@
-package com.digitalwallet.service;
+package com.digitalwallet.utils;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

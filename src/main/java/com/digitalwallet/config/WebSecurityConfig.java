@@ -4,7 +4,6 @@ package com.digitalwallet.config;
 import com.digitalwallet.security.jwt.AuthEntryPointJwt;
 import com.digitalwallet.security.jwt.AuthTokenFilter;
 import com.digitalwallet.service.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,12 +27,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
         prePostEnabled = true)
 public class WebSecurityConfig {
 
-    @Autowired
+    final
     UserDetailsServiceImpl userDetailsService;
     @Value("${spring.h2.console.path}")
     private String h2ConsolePath;
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
+    private final AuthEntryPointJwt unauthorizedHandler;
+
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, AuthEntryPointJwt unauthorizedHandler) {
+        this.userDetailsService = userDetailsService;
+        this.unauthorizedHandler = unauthorizedHandler;
+    }
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {

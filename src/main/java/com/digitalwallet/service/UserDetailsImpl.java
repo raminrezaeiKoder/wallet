@@ -1,4 +1,4 @@
-package com.digitalwallet.security;
+package com.digitalwallet.service;
 
 import com.digitalwallet.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;

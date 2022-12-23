@@ -9,6 +9,7 @@ import com.digitalwallet.generic.GenericServiceImpl;
 import com.digitalwallet.repository.WalletRepository;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.LoginException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,9 +19,13 @@ public class WalletService extends GenericServiceImpl<Wallet, Long> {
 
     private final UserService userService;
 
-    public WalletService(WalletRepository walletRepository, UserService userService) {
+
+    private final AuthService authService;
+
+    public WalletService(WalletRepository walletRepository, UserService userService, AuthService authService) {
         this.walletRepository = walletRepository;
         this.userService = userService;
+        this.authService = authService;
     }
 
     @Override
@@ -48,16 +53,19 @@ public class WalletService extends GenericServiceImpl<Wallet, Long> {
 
 
     //save a wallet into database with its userId
-
-    public void saveWalletWithItsUser(Wallet wallet, Long userId) throws UserNotFoundException {
-        User user = userService.findBydId(userId).orElseThrow(() -> new UserNotFoundException());
+    public void saveWalletWithItsUser(Wallet wallet, Long userId) throws UserNotFoundException, LoginException {
+        if (!authService.checkAuthenticationByUserId(userId))
+            throw new LoginException("user with this userId didnt loged in");
+        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException());
         wallet.setWalletUser(user);
         walletRepository.save(wallet);
     }
 
 
-    public void updateWalletWithItsUser(Wallet wallet, Long userId) throws UserNotFoundException, WalletNotFoundException {
-        User user = userService.findBydId(userId).orElseThrow(() -> new UserNotFoundException());
+    public void updateWalletWithItsUser(Wallet wallet, Long userId) throws UserNotFoundException, WalletNotFoundException, LoginException {
+        if (authService.checkAuthenticationByUserId(userId))
+            throw new LoginException("user with this userId didnt loged in");
+        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException());
         Wallet wallet2 = walletRepository.findById(wallet.getWalletId()).orElseThrow(WalletNotFoundException::new);
         wallet2.setWalletUser(user);
         walletRepository.save(wallet2);

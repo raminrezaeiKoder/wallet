@@ -1,6 +1,7 @@
 package com.digitalwallet.security.jwt;
 
 import com.digitalwallet.service.UserDetailsServiceImpl;
+import com.digitalwallet.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

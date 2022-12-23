@@ -5,6 +5,7 @@ import com.digitalwallet.dto.request.UserLoginRequestDto;
 import com.digitalwallet.dto.request.UserRegisterRequestDto;
 import com.digitalwallet.dto.response.UserRegisterResponseDto;
 import com.digitalwallet.dto.response.UserResponseDto;
+import com.digitalwallet.entity.RefreshToken;
 import com.digitalwallet.entity.Role;
 import com.digitalwallet.entity.RoleType;
 import com.digitalwallet.entity.User;
@@ -15,8 +16,10 @@ import com.digitalwallet.mapper.response.UserResponseMapper;
 import com.digitalwallet.messages.ResponseMessage;
 import com.digitalwallet.repository.RoleRepository;
 import com.digitalwallet.repository.UserRepository;
-import com.digitalwallet.security.UserDetailsImpl;
-import com.digitalwallet.security.jwt.JwtUtils;
+import com.digitalwallet.service.AuthService;
+import com.digitalwallet.service.RefreshTokenService;
+import com.digitalwallet.service.UserDetailsImpl;
+import com.digitalwallet.utils.JwtUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +43,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/auth")
 public class AuthController {
 
+    private final AuthService authService;
     final
     AuthenticationManager authenticationManager;
 
+    private final RefreshTokenService refreshTokenService;
     final
     UserRepository userRepository;
 
@@ -62,7 +67,7 @@ public class AuthController {
     private final UserRegisterResponseMapper userRegisterResponseMapper;
     private final UserResponseMapper userResponseMapper;
 
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils, UserLoginRequestMapper userLoginRequestMapper, UserRegisterRequestMapper userRegisterRequestMapper, UserRegisterResponseMapper userRegisterResponseMapper, UserResponseMapper userResponseMapper) {
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils, UserLoginRequestMapper userLoginRequestMapper, UserRegisterRequestMapper userRegisterRequestMapper, UserRegisterResponseMapper userRegisterResponseMapper, UserResponseMapper userResponseMapper, AuthService authService, RefreshTokenService refreshTokenService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -72,6 +77,8 @@ public class AuthController {
         this.userRegisterRequestMapper = userRegisterRequestMapper;
         this.userRegisterResponseMapper = userRegisterResponseMapper;
         this.userResponseMapper = userResponseMapper;
+        this.authService = authService;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @PostMapping("/login")
@@ -84,9 +91,15 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
+
         ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+        ResponseCookie jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.getToken());
+
 
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
@@ -98,8 +111,9 @@ public class AuthController {
         userResponseDto.setId(userDetails.getId());
         userResponseDto.setUserName(userDetails.getUsername());
         userResponseDto.setRolesList(roles);
-
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
                 .body(userResponseDto);
     }
 
@@ -115,7 +129,7 @@ public class AuthController {
 
 
         // encode the password
-        user.setPassword(encoder.encode(registerRequest.getPassword()));
+        // user.setPassword(encoder.encode(registerRequest.getPassword()));
 
         Set<String> strRoles = registerRequest.getRole();
         Set<Role> roles = new HashSet<>();
@@ -148,7 +162,8 @@ public class AuthController {
         }
 
         user.setRoles(roles);
-        userRepository.save(user);
+        //String userName, String firstName, String lastName, String phoneNumber, String nationalCode, String email, String password, String passwordConfirm
+        authService.register(user, registerRequest.getPasswordConfirm());
         ResponseMessage responseMessage = ResponseMessage.withResponseData(userRegisterResponseDto, "user registered successfully", "info");
         return ResponseEntity.ok(responseMessage);
     }

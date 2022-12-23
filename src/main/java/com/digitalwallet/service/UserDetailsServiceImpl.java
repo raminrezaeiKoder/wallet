@@ -2,7 +2,6 @@ package com.digitalwallet.service;
 
 import com.digitalwallet.entity.User;
 import com.digitalwallet.repository.UserRepository;
-import com.digitalwallet.security.UserDetailsImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

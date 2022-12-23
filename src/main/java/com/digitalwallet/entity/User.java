@@ -61,4 +61,6 @@ public class User extends GenericEntity {
         this.email = email;
         this.password = password;
     }
+
+
 }

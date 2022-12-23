@@ -80,6 +80,6 @@ public class TransactionController {
 
 @GetMapping("{transactionId}")
     public ResponseEntity<TransactionResponseDto> findById(@PathVariable("transactionId") Long transactionId){
-        return new ResponseEntity<>(transactionResponseMapper.toBaseDto(transactionService.findBydId(transactionId).get()),HttpStatus.OK);
+        return new ResponseEntity<>(transactionResponseMapper.toBaseDto(transactionService.findById(transactionId).get()), HttpStatus.OK);
 }
 }

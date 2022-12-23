@@ -1,6 +1,8 @@
 package com.digitalwallet.dto.request;
 
 import com.digitalwallet.generic.GenericDto;
+import com.digitalwallet.validation.NationalCode;
+import com.digitalwallet.validation.PhoneNumber;
 import lombok.*;
 
 import javax.validation.constraints.Email;
@@ -19,7 +21,11 @@ public class UserRegisterRequestDto extends GenericDto {
     @NotBlank
     @Size(max = 20)
     private String userName;
+    @NotBlank
+    @Size(min = 2, max = 20)
     private String name;
+    @NotBlank
+    @Size(min = 4, max = 20)
     private String lastName;
 
 
@@ -27,18 +33,22 @@ public class UserRegisterRequestDto extends GenericDto {
     @Size(max = 50)
     @Email
     private String email;
+    @NotBlank
+    @PhoneNumber
     private String phoneNumber;
     @NotBlank
-    @Size(min = 1, max = 10)
+    @NationalCode
     private String nationalCode;
-    //private List<WalletRequestDto> walletList = new ArrayList<>(); //todo it can be done later
-    // private List<Transaction> transactionList = new ArrayList<>();
 
 
     private Set<String> role;
     @NotBlank
-    @Size(min = 6, max = 40)
+
     private String password;
+
+    @NotBlank
+
+    private String passwordConfirm;
 
 
 }

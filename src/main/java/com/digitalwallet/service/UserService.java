@@ -17,6 +17,7 @@ public class UserService extends GenericServiceImpl<User, Long> {
         this.userRepository = userRepository;
     }
 
+
     @Override
     protected GenericRepository getRepository() {
         return this.userRepository;
@@ -55,5 +56,9 @@ public class UserService extends GenericServiceImpl<User, Long> {
 
     public Optional<User> findByNationalCode(String naitonalCode) {
         return userRepository.findByNationalCode(naitonalCode);
+    }
+
+    public Optional<User> findByUserName(String username) {
+        return userRepository.findByUserName(username);
     }
 }

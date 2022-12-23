@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.login.LoginException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -31,7 +33,8 @@ public class WalletController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseMessage<?>> save(@RequestBody WalletRequestDto walletRequestDto, HttpServletResponse httpServletResponse) throws UserNotFoundException {
+    public ResponseEntity<ResponseMessage<?>> save(@RequestBody WalletRequestDto walletRequestDto, HttpServletRequest httpServletRequest) throws UserNotFoundException, LoginException {
+
         Wallet wallet = walletRequestMapper.toBaseEntity(walletRequestDto);
         walletService.saveWalletWithItsUser(wallet, walletRequestDto.getUserId());
         WalletResponseDto walletResponseDto = walletResponseMapper.toBaseDto(wallet);
@@ -56,11 +59,11 @@ public class WalletController {
 
     @GetMapping("/{walletId}")
     public ResponseEntity<WalletResponseDto> findById(@PathVariable("walletId") Long walletId) throws WalletNotFoundException {
-        return ResponseEntity.ok(walletResponseMapper.toBaseDto(walletService.findBydId(walletId).orElseThrow(WalletNotFoundException::new)));
+        return ResponseEntity.ok(walletResponseMapper.toBaseDto(walletService.findById(walletId).orElseThrow(WalletNotFoundException::new)));
     }
 
     @PutMapping
-    public ResponseEntity<ResponseMessage<?>> update(@RequestBody WalletRequestDto walletRequestDto, HttpServletResponse httpServletResponse) throws UserNotFoundException, WalletNotFoundException {
+    public ResponseEntity<ResponseMessage<?>> update(@RequestBody WalletRequestDto walletRequestDto, HttpServletResponse httpServletResponse) throws UserNotFoundException, WalletNotFoundException, LoginException {
         Wallet wallet = walletRequestMapper.toBaseEntity(walletRequestDto);
         walletService.updateWalletWithItsUser(wallet, walletRequestDto.getUserId());
         WalletResponseDto walletResponseDto = walletResponseMapper.toBaseDto(wallet);

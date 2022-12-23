@@ -8,7 +8,7 @@ public abstract class GenericServiceImpl<T extends GenericEntity, ID extends Ser
     protected abstract GenericRepository getRepository();
 
     @Override
-    public Optional<T> findBydId(ID id) {
+    public Optional<T> findById(ID id) {
         return getRepository().findById(id);
     }
 
